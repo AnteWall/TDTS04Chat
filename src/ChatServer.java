@@ -31,6 +31,8 @@ class ChatImpl extends ChatPOA
     	if(activeUsers.containsValue(user)){
     		callObj.callback("Username is already taken, choose another one.");
     		return false;
+    	}else if(activeUsers.containsKey(callObj)){
+    		callObj.callback("You are aleady registred");
     	}else{
     		sendToAll(user + " joined that chatroom");
     		activeUsers.put(callObj, user);
@@ -56,6 +58,36 @@ class ChatImpl extends ChatPOA
     	//callObj.callback(userListStr);
     	return userListStr;
     }
+    
+    public void joinGame(ChatCallback callObj, String piece){
+    	/*if(userActive(callObj)){
+    		callObj.callback("Need to register to be able to play, tyoe join <name>");
+    		return;
+    	}*/
+    	if(game.isActive()){
+    		callObj.callback("Game is already in progress");
+    		return;
+    	}
+    	if(game.addPlayer(callObj, activeUsers.get(callObj))){
+    		game.addPlayer(callObj, piece);
+    		callObj.callback("Joined the game as : " + piece);
+    		callObj.callback(game.getBoard());
+    	}else{
+    		callObj.callback("Piece has already been taken, try with the other piece!");
+    	}
+    }
+    
+    public void placeMarker(ChatCallback callObj, String position){
+    	if(game.activePlayer(callObj)){
+    		game.placeMarker(callObj, position);
+    		sendToPlayers(game.getBoard());
+    		if(game.isGameOver()){
+    			sendToPlayers("Game Over!!! Winner is: " + game.getWinner());
+    		}
+    	}else{
+    		callObj.callback("You are not active in this game session");
+    	}
+    }
 
     public String say(ChatCallback callobj, String msg)
     {
@@ -73,6 +105,13 @@ class ChatImpl extends ChatPOA
     		return true;
     	}
     	return false;
+    }
+    
+    private void sendToPlayers(String msg){
+    	for(ChatCallback callObj: game.getPLayers().keySet())
+    	{
+    		callObj.callback(msg);
+    	}    
     }
     
     private void sendToAll(String msg){

@@ -71,6 +71,22 @@ public class ChatClient
 	    		String list = chatImpl.list(cref);
 	    		System.out.println(list);
 	    		break;
+	    	case "game":
+	    		if(inputStr.length < 2){
+	    			System.out.println("You need to select a piece, 'X' or 'O'");
+	    		}else if(!inputStr[1].equals("X") && !inputStr[1].equals("O")){
+	    			System.out.println("You need to select correct piece, 'X' or 'O'");
+	    		}else{
+		    		chatImpl.joinGame(cref, inputStr[1]);
+	    		}
+	    		break;
+	    	case "place":
+	    		if(inputStr.length < 2){
+	    			System.out.println("You need to specify a location");
+	    		}else{
+	    			chatImpl.placeMarker(cref, inputStr[1]);
+	    		}
+	    		break;
 	    	case "quit":
 	    		chatImpl.leave(cref);
 	    		running = false;
