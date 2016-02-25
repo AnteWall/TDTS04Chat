@@ -76,31 +76,31 @@ public class FiveInARow {
 		}
 	}
 	
-	private char[][] convertGridVertical(char[][] a)
+	private char[][] convertGridVertical(char[][] inputArray)
 	  {
-	    char[][] transposed = new char[a.length][a.length];
-	    for(int i = 0; i < a.length; ++i)
+	    char[][] convertedGrid = new char[inputArray.length][inputArray.length];
+	    for(int i = 0; i < inputArray.length; ++i)
 	    {
-	      for(int j = 0; j < a.length; ++j)
+	      for(int j = 0; j < inputArray.length; ++j)
 	      {
-	        transposed[j][i] = a[i][j];
+	        convertedGrid[j][i] = inputArray[i][j];
 	      }
 	    }
 
-	    return transposed;
+	    return convertedGrid;
 	  }
 	
-	  private char[][] shiftDiagionalGrid(char[][] a, boolean left)
+	  private char[][] shiftDiagionalGrid(char[][] inputArray, boolean left)
 	  {
-	    char[][] transposed = new char[a.length][a.length];
-	    for (int i = 0; i < a.length; ++i)
+	    char[][] shiftedArray = new char[inputArray.length][inputArray.length];
+	    for (int i = 0; i < inputArray.length; ++i)
 	    {
-	      int offset = left ? i : a.length-i;
-	      System.arraycopy(a[i], offset, transposed[i], 0, a[i].length-offset);
-	      System.arraycopy(a[i], 0, transposed[i], a[i].length-offset, offset);
+	      int offset = left ? i : inputArray.length-i;
+	      System.arraycopy(inputArray[i], offset, shiftedArray[i], 0, inputArray[i].length-offset);
+	      System.arraycopy(inputArray[i], 0, shiftedArray[i], inputArray[i].length-offset, offset);
 	    }
 
-	    return transposed;
+	    return shiftedArray;
 	  }
 	
 	private void matchString(String str){
