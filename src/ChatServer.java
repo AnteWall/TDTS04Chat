@@ -60,10 +60,6 @@ class ChatImpl extends ChatPOA
     }
     
     public void joinGame(ChatCallback callObj, String piece){
-    	/*if(userActive(callObj)){
-    		callObj.callback("Need to register to be able to play, tyoe join <name>");
-    		return;
-    	}*/
     	if(game.isActive()){
     		callObj.callback("Game is already in progress");
     		return;
@@ -71,18 +67,27 @@ class ChatImpl extends ChatPOA
     	if(game.addPlayer(callObj, activeUsers.get(callObj))){
     		game.addPlayer(callObj, piece);
     		callObj.callback("Joined the game as : " + piece);
-    		callObj.callback(game.getBoard());
+    		if(game.getPLayers().size() == 2){
+    			sendToPlayers("Game has begun! Type Place <pos> to place. 'X' will start");
+    			game.startGame();
+    			sendToPlayers(game.getBoard());
+    		}
     	}else{
     		callObj.callback("Piece has already been taken, try with the other piece!");
     	}
     }
     
     public void placeMarker(ChatCallback callObj, String position){
+    	if(!game.isActive()){
+    		callObj.callback("Game not started yet, more players need to join");
+    		return;
+    	}
     	if(game.activePlayer(callObj)){
     		game.placeMarker(callObj, position);
     		sendToPlayers(game.getBoard());
     		if(game.isGameOver()){
     			sendToPlayers("Game Over!!! Winner is: " + game.getWinner());
+    			game.restart();
     		}
     	}else{
     		callObj.callback("You are not active in this game session");

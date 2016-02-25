@@ -9,7 +9,7 @@ import ChatApp.ChatCallback;
 public class FiveInARow {
 	
 	private Map<ChatCallback, String> players;
-	private int SIZE = 5;
+	private int SIZE = 7;
 	private char [][] grid;
 	private boolean active;
 	private int spacesUnocupied;
@@ -30,6 +30,10 @@ public class FiveInARow {
 		return true;
 	}
 	
+	public void startGame(){
+		active = true;
+	}
+	
 	public void restart(){
 		spacesUnocupied = SIZE*SIZE;
 	    for(int i = 0; i < SIZE; ++i)
@@ -37,6 +41,7 @@ public class FiveInARow {
 	      Arrays.fill(grid[i], ' ');
 	    }
 	    players.clear();
+	    active = false;
 	}
 	
 	public String getBoard(){
@@ -53,25 +58,63 @@ public class FiveInARow {
 	}
 	
 	public boolean isGameOver(){
-		checkRows();
+		checkRows(grid);
+		checkRows(convertGridVertical(grid));
+	    checkRows(convertGridVertical(shiftDiagionalGrid(grid, true)));
+	    checkRows(convertGridVertical(shiftDiagionalGrid(grid, false)));
+	    if(spacesUnocupied <= 0){
+	    	gameOver = true;
+	    	winner = "Tied!";
+	    }
 		return gameOver;
 	}
-	private void checkRows(){
+	private void checkRows(char[][] inputGrid){
 		String rowStr = "";
 		for(int i = 0; i < SIZE; i++){
-			rowStr = new String(grid[i]);
-			Pattern regex = Pattern.compile("X{5}");
-			Matcher matcher = regex.matcher(rowStr);
-			if(matcher.find()){
-				gameOver = true;
-				winner = "X";
-			}
-			regex = Pattern.compile("O{5}");
-			matcher = regex.matcher(rowStr);
-			if(matcher.find()){
-				gameOver = true;
-				winner = "O";
-			}
+			rowStr = new String(inputGrid[i]);
+			matchString(rowStr);
+		}
+	}
+	
+	private char[][] convertGridVertical(char[][] a)
+	  {
+	    char[][] transposed = new char[a.length][a.length];
+	    for(int i = 0; i < a.length; ++i)
+	    {
+	      for(int j = 0; j < a.length; ++j)
+	      {
+	        transposed[j][i] = a[i][j];
+	      }
+	    }
+
+	    return transposed;
+	  }
+	
+	  private char[][] shiftDiagionalGrid(char[][] a, boolean left)
+	  {
+	    char[][] transposed = new char[a.length][a.length];
+	    for (int i = 0; i < a.length; ++i)
+	    {
+	      int offset = left ? i : a.length-i;
+	      System.arraycopy(a[i], offset, transposed[i], 0, a[i].length-offset);
+	      System.arraycopy(a[i], 0, transposed[i], a[i].length-offset, offset);
+	    }
+
+	    return transposed;
+	  }
+	
+	private void matchString(String str){
+		Pattern regex = Pattern.compile("X{5}");
+		Matcher matcher = regex.matcher(str);
+		if(matcher.find()){
+			gameOver = true;
+			winner = "X";
+		}
+		regex = Pattern.compile("O{5}");
+		matcher = regex.matcher(str);
+		if(matcher.find()){
+			gameOver = true;
+			winner = "O";
 		}
 	}
 
