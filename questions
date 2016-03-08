@@ -1,0 +1,21 @@
+1. Explain what is the purpose of the name server that is being used by the chat system. How would a call by the client have looked like if the name server would not have existed?
+
+The purpose of the name server is to store the information about location and information about the host and clients. 
+If a name server did not exists the client would need to store all the information about the server and other clients which is not ideal and hard to keep in sync between clients.
+
+
+2. The server in the lab is using the callback function. This is one way of 
+implementing asynchronous method calls in CORBA and does not affect how objects 
+are implemented in the server. Please explain why this is the case. Are there 
+other alternative options for how asynchronous calls can be implemented in 
+CORBA?
+
+This is becuase the server dont care if the client is ready or not to revice the data. It is the client application that is responsible to hande the callback. 
+
+Instead of using this method a polling method could be used instead. This works the other way around and the server does not tell the clients about new messages but the client will request new messages from the server when to take it. Often decided by a timer.
+
+
+Testing and limitations:
+Testing was done by testing the system in several terminals at the same time. We came up with senarious that could accur and implemented and tested those senarious for all methods. For example: that a user cant join if there nickname is already taken. 
+
+The five in a row game does not take into considartion whose turn it is. Therefor player x could place all five in a row before player o have placed any. Otherwise it works like a real five in a row game. 
