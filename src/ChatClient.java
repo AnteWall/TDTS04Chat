@@ -84,8 +84,15 @@ public class ChatClient
 	    		if(inputStr.length < 2){
 	    			System.out.println("You need to specify a location");
 	    		}else{
-	    			chatImpl.placeMarker(cref, inputStr[1]);
+	    			if(inputStr[1].length() != 2){
+	    				System.out.println("Not a valid location");
+	    			}else{
+		    			chatImpl.placeMarker(cref, inputStr[1]);
+	    			}
 	    		}
+	    		break;
+	    	case "leave":
+	    		chatImpl.leave(cref);
 	    		break;
 	    	case "quit":
 	    		chatImpl.leave(cref);
